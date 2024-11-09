@@ -1,0 +1,116 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #00bcc9;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  color: white;
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.nav-links {
+  list-style-type: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin-left: 2rem;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 86vw;
+    min-width: 300px;
+    height: 86vh;
+    margin:2vh 7vw;
+    background-color:rgb(245, 245, 245);
+    overflow-x: auto;
+  }
+  .inputs{
+    display: flex;
+    align-items: center;
+    background-color: #00bcc9;
+    width: 100%;
+    height: 7vh;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.inputs div{
+  margin-left: 20px;
+  width: 50%;
+  display: flex;
+  /* justify-content: space-between; */
+  gap: 50%;
+}
+select{
+    width: 10vw;
+    font-size: large;
+    padding: 2px;
+    border-radius: 30px;
+  }
+select:focus{
+    outline: none;
+}
+.Search-btn {
+    font-size: large;
+    padding: 4px 8px;
+    border-radius: 15px;
+    border:1px solid black;
+    background-color: white;
+}
+button:active{
+    background-color:#00bcc9;
+    border: 2px solid black;
+    color: white;
+}
+.select-search{
+    width: 20vw;
+    display: flex;
+    justify-content: space-around;
+}
+.Hospital-list{
+  width: 100%;
+  padding: 4px;
+  font-size: large;
+  border-collapse: collapse;
+}
+.Hospital-list tbody{
+  display: block;
+  max-height: 79vh;
+  overflow-y: scroll;
+}
+.Hospital-list tbody td{
+  text-align: center;
+  width:43vw;
+  border: 1px solid black;
+  padding: 8px;
+}
+.Hospital-list tbody td a {
+  text-decoration: none;
+  color: black;
+}
+.Hospital-list tbody td a:hover{
+
+  font-size: large;
+}

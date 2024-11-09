@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/images/landing-page-image.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/login-page.css">
+    <title>Swasthya Setu</title>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <img src="/images/login-page-bg.png" alt="" class="login-bg">
+            <h2>Login</h2>
+            <div id="error-message">
+                <script>
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const errorMessage = urlParams.get('error');
+                    if (errorMessage) {
+                        document.write(errorMessage);
+                    }
+                </script>
+            </div>
+            <form action="" method="POST" >
+                <div class="textbox">
+                    <input type="text" name="username" id="username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="textbox">
+                    <input type="password" name="password" id="password" required>
+                    <label for="password">Password</label>
+                </div>
+                <input type="submit" class="btn" value="Login">
+                <p class="signup-link">Don't have an account? <a href="/signup">Sign up here</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
