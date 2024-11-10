@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Recommendation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f9f4; /* Light lime background */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #9acd32; /* Lime green */
+            color: #ffffff;
+        }
+
+        .navbar .brand {
+            font-size: 1.5rem; 
+            font-weight: bold;
+        }
+
+        .navbar .search-box {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar input[type="text"] {
+            padding: 0.5rem 1rem;
+            font-size: 1rem; 
+            border: none;
+            border-radius: 0.25rem;
+            margin-left: 1rem;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+        }
+
+        .navbar .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.01rem;
+            padding: .28rem;
+            position: relative; 
+        }
+
+        .navbar .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 0;
+            background-color: white;
+            transition: width 0.4s ease-in-out;
+        }
+
+        .navbar .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px 0;
+        }
+
+        @media (max-width: 48rem) { /* 768px */
+            .navbar .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                right: 0;
+                background-color: #9acd32;
+                width: 100%;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .navbar .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        /* Container styles */
+        .container {
+            background-color: white;
+            padding: 40px 60px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 80px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #6b8e23; /* Dark lime */
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        label {
+            font-size: 18px;
+            color: #556b2f; /* Olive green */
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid #cccccc;
+            font-size: 18px;
+            box-sizing: border-box;
+        }
+
+        select:focus, button:focus {
+            border-color: #9acd32;
+            outline: none;
+        }
+
+        button {
+            background-color: #9acd32; /* Lime green */
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #6b8e23; /* Dark lime green */
+        }
+
+        .result {
+            margin-top: 30px;
+            background-color: #f0fff0; /* Pale lime */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result h2 {
+            margin-bottom: 15px;
+            font-size: 22px;
+            color: #6b8e23;
+        }
+
+        .result p {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #556b2f;
+        }
+
+        .loading {
+            color: #9acd32;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="brand">Health Setu</div>
+        <div class="hamburger" id="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="page1.html">Nearby Hospital</a></li>
+            <li><a href="page2.html">Diet & Exercise</a></li>
+            <li><a href="page3.html">BMI Calculator</a></li>
+            <li><a href="page4.html">Weight Gain/Loss</a></li>
+            <li><a href="page5.html">Stress Level Checker</a></li>
+        </ul>
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Search...">
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Get Diet Recommendation</h1>
+        <form id="diseaseForm">
+            <label for="disease">Select Disease:</label>
+            <select id="disease" name="disease" required>
+                <!-- Options will be populated here -->
+            </select>
+            <button type="submit">Get Diet</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Hamburger menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Function to populate the dropdown with diseases
+        async function populateDiseases() {
+            try {
+                const response = await fetch('http://localhost:3000/api/diseases');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const diseases = await response.json();
+                const selectElement = document.getElementById('disease');
+                
+                // Clear existing options
+                selectElement.innerHTML = '';
+                
+                // Add a default option
+                const defaultOption = document.createElement('option');
+                defaultOption.text = 'Select a disease';
+                defaultOption.value = '';
+                selectElement.appendChild(defaultOption);
+                
+                // Add each disease as an option
+                diseases.forEach(disease => {
+                    const option = document.createElement('option');
+                    option.text = disease.Disease;
+                    option.value = disease.Disease;
+                    selectElement.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching diseases:', error);
+            }
+        }
+
+        // Call the function to populate the dropdown on page load
+        document.addEventListener('DOMContentLoaded', populateDiseases);
+
+        // Handle form submission
+        document.getElementById('diseaseForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+            
+            const disease = document.getElementById('disease').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p class="loading">Loading...</p>'; // Show loading text
+
+            try {
+                const response = await fetch('http://localhost:3000/api/receiveData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ disease })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <h2>Recommended Diet</h2>
+                        <p><strong>Title:</strong> ${data.diet.title}</p>
+                        <p><strong>Description:</strong> ${data.diet.description}</p>
+                        <p><strong>Breakfast:</strong> ${data.diet.breakfast}</p>
+                        <p><strong>Lunch:</strong> ${data.diet.lunch}</p>
+                        <p><strong>Snacks:</strong> ${data.diet.snacks}</p>
+                        <p><strong>Dinner:</strong> ${data.diet.dinner}</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p>${data.error}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
